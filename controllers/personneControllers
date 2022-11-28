@@ -1,0 +1,72 @@
+const Personne = require('../models/personne');
+
+exports.getAllPersonnes = async (req, res, next ) => {
+    try {
+        const [personnes, _] = await Personne.findAll();
+        
+        res.status(200).json({personnes});
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
+
+exports.createNewPersonne = async (req, res, next ) => {
+    try {
+        let{ societe, addresse, telephone, type, id_user } = req.body;
+        let personne = new Personne (societe, addresse, telephone, type, id_user);
+    
+        personne = await Personne.save();
+    
+        res.status(200).json({message: "Personne created"});
+    } catch (error) {
+        console.log(error);
+        next(error);        
+    }
+}
+
+exports.getPersonneById = async (req, res, next ) => {
+    try {
+        let personneId = req.params.id;
+        let [personne, _] = await Personne.findById(personneId);
+
+        res.status(200).json( {personne: personne[0]} );
+    } catch (error) {
+        next(error);
+    }
+}
+
+
+
+exports.updatePersonne = async (req, res, next) => {
+    try {
+        let personneId = req.params.id;
+
+        if(!personneId){
+            return res.status(400).json({"message":` La personne ${req.body.id} nexiste pas`});
+        }
+        if(personne.societe) personne.societe = req.body.societe;
+        if(personne.addresse) personne.addresse = req.body.addresse;
+        if(personne.telephone) personne.telephone = req.body.telephone;
+        if(personne.type) personne.type = req.body.type;
+        if(personne.user_id) personne.user_id = req.body.user_id
+
+        personne = await personne.save();
+
+        res.status(200).json({"message":'personne modified'});
+    } catch (error) {
+        next(error);
+    }
+}
+
+exports.deletePersonne = async (req, res, next) => {
+    try {
+        let personneId = req.params.id;
+        set [personne, _] = await Personne.deleteOne([personneId, _]);
+
+        res.status(200).json({"message":'personne deleted'});
+    } catch (error) {
+        next(error);
+    }
+}
+  
